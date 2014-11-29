@@ -1,0 +1,3 @@
+[submodule "Communications/Arduimmer"]
+	path = Communications/Arduimmer
+	url = https://github.com/pleonex/Arduimmer
