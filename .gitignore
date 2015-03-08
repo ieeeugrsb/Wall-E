@@ -1,0 +1,10 @@
+# Contiki builds
+obj_*
+contiki-cc2530dk.lib
+
+*.cc2530dk
+*.hex
+*.lk
+*.map
+*.mem
+
