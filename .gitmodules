@@ -1,3 +1,6 @@
 [submodule "Communications/Arduimmer"]
 	path = Communications/Arduimmer
 	url = https://github.com/pleonex/Arduimmer
+[submodule "Communications/contiki"]
+	path = Communications/contiki
+	url = git@github.com:g-oikonomou/contiki-sensinode.git
