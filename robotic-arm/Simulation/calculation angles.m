@@ -1,4 +1,4 @@
-
+﻿
 %Calculo y simulación brazo
 %-----------------------------------------------------------------------------------------------------
 %Descripción: Calculo y simulación de los angulos de un brazo de 3 grados de libertad dado una posicion X,Y en el plano
@@ -17,9 +17,9 @@ cabeceo=-pi/4;
 x=50;
 y=150+BaseY;
 
-LongMunec=50;
-LongBrazo=150;
-LongAntBr=150;
+LongMunec=90;
+LongBrazo=140;
+LongAntBr=110;
 
 %%
 afx=cos(cabeceo)*LongMunec;
