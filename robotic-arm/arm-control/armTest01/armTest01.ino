@@ -7,9 +7,9 @@ const float PI_F=3.14159265358979;
 // Características físicas
 const float BaseX=0;						//Posición X de la base del brazo.
 const float BaseY=0;						//Posición Y de la base del brazo.
-const float LongBrazo=150;			//Longitud del brazo (primer segmento).
-const float LongAntBr=150;			//Longitud del antebrazo (segmento intermedio).
-const float LongMunec=50;			//Longitud de la muñeca (último segmento).
+const float LongBrazo=140;			//Longitud del brazo (primer segmento).
+const float LongAntBr=110;			//Longitud del antebrazo (segmento intermedio).
+const float LongMunec=90;			//Longitud de la muñeca (último segmento).
 
 
 // PINES
