@@ -28,12 +28,15 @@
 static char command[MAX_COMMAND_LEN];
 static uint16_t command_len;
 
+#define LOCAL_PORT 3000
+static struct uip_udp_conn *conn;
+
 /* Declare the process and select it for autostart */
 PROCESS(node_process, "Main process for a node");
 AUTOSTART_PROCESSES(&node_process);
 
 /* --------------------------------------------------------------- */
-/* TCP/IP handler event                                            */
+/* UDP/IP handler event                                            */
 /* --------------------------------------------------------------- */
 static void tcpip_handler()
 {
@@ -65,7 +68,19 @@ static void input_handler(char* input)
 /* --------------------------------------------------------------- */
 static void network_config()
 {
-    // TODO
+    uip_ipaddr_t ipaddr;
+
+    // Set the remote IP to stablish a "UDP connection".
+    uip_ip6addr(&ipaddr, 0xAAAA, 0, 0, 0, 0x0212, 0x4b00, 0x02cb, 0x0f32);
+    ushort16_t remote_port = 3000;
+
+    // Create the "connection" so we receive package only from that address
+    conn = udp_new(&ipaddr, UIP_HTONS(remote_port), NULL);
+    if (!conn)
+        return;
+
+    // Bind the "connection" to a local port
+    udp_bin(conn, UIP_HTONS(LOCAL_PORT));
 }
 
 /* --------------------------------------------------------------- */
@@ -78,6 +93,10 @@ PROCESS_THREAD(node_process, ev, data)
 
     // Configure the network
     network_config();
+    if (!conn) {
+        printf("E01\n");
+        PROCESS_EXIT();
+    }
 
     // Main, infinite, loop of the process
     while (1) {
