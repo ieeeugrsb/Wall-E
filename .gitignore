@@ -8,5 +8,8 @@ contiki-cc2530dk.lib
 *.map
 *.mem
 
+# SDCC sources
+Communications/sdcc/sdcc
+
 # Arduino builds
 .build/

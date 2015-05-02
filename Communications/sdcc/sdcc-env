@@ -1,0 +1,6 @@
+#!/bin/bash
+NEW_PREFIX=/opt/sdcc
+export LD_LIBRARY_PATH=$NEW_PREFIX/lib:$LD_LIBRARY_PATH
+export PATH=$NEW_PREFIX/bin:$PATH
+export C_INCLUDE_PATH=$NEW_PREFIX/include:$C_INCLUDE_PATH
+PS1="\[\033[1;31m\][sdcc]\[\033[0m\][\u@\h \W]\$ "
