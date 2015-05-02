@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include "dev/leds.h"
 #include "dev/serial-line.h"
+#include "net/uip-debug.h"
 
 #define MAX_COMMAND_LEN 100
 static char command[MAX_COMMAND_LEN];
@@ -52,7 +53,7 @@ static void tcpip_handler()
     memcpy(command, uip_appdata, command_len);
 
     // Send the command by a serial line
-    printf("%s", command);
+    PRINTF("%s", command);
 }
 
 /* --------------------------------------------------------------- */
@@ -60,7 +61,33 @@ static void tcpip_handler()
 /* --------------------------------------------------------------- */
 static void input_handler(char* input)
 {
-    // TODO
+    // If we haven't be able to reach the DAG RPL Router give error
+    if (uip_ds6_get_global(ADDR_PREFERRED) == NULL) {
+        PRINTF("E02\n");
+        return;
+    }
+
+    uip_udp_packet_send(conn, input, strlen(input));
+}
+
+static void print_local_addresses()
+{
+  int i;
+  uint8_t state;
+
+  PRINTF("# IPv6 addresses:\n");
+  for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
+    state = uip_ds6_if.addr_list[i].state;
+    if(uip_ds6_if.addr_list[i].isused && (state == ADDR_TENTATIVE || state
+        == ADDR_PREFERRED)) {
+      PRINTF("# |-> ");
+      PRINT6ADDR(&uip_ds6_if.addr_list[i].ipaddr);
+      PRINTF("\n");
+
+      if(state == ADDR_TENTATIVE)
+        uip_ds6_if.addr_list[i].state = ADDR_PREFERRED;
+    }
+  }
 }
 
 /* --------------------------------------------------------------- */
@@ -69,10 +96,10 @@ static void input_handler(char* input)
 static void network_config()
 {
     uip_ipaddr_t ipaddr;
+    uint16_t remote_port = 3000;
 
     // Set the remote IP to stablish a "UDP connection".
     uip_ip6addr(&ipaddr, 0xAAAA, 0, 0, 0, 0x0212, 0x4b00, 0x02cb, 0x0f32);
-    ushort16_t remote_port = 3000;
 
     // Create the "connection" so we receive package only from that address
     conn = udp_new(&ipaddr, UIP_HTONS(remote_port), NULL);
@@ -80,7 +107,10 @@ static void network_config()
         return;
 
     // Bind the "connection" to a local port
-    udp_bin(conn, UIP_HTONS(LOCAL_PORT));
+    udp_bind(conn, UIP_HTONS(LOCAL_PORT));
+
+    // Print local address
+    print_local_addresses();
 }
 
 /* --------------------------------------------------------------- */
@@ -94,7 +124,7 @@ PROCESS_THREAD(node_process, ev, data)
     // Configure the network
     network_config();
     if (!conn) {
-        printf("E01\n");
+        PRINTF("E01\n");
         PROCESS_EXIT();
     }
 
