@@ -2,7 +2,7 @@
   CC2530 to PC bridge using Arduino Leonardo
   Info about CC2530: https://github.com/contiki-os/contiki/wiki/8051-Install-and-Use
   WARNING: CC2530 ports work at 3.3 V, not 5 V as Arduino, you need a converter.
-   
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -17,6 +17,8 @@
   along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+const bool DEBUG = true;
+
 void setup() {
   // The serial line settings for CC2530 communication are:
   // * Baud Rate: 115200
@@ -30,8 +32,8 @@ void setup() {
 void loop() {
   // Read the output from CC2530
   String output = Serial1.readString();
-  
+
   // Send it by the USB Serial Communication (PC)
-  if (output.length() > 0)
+  if (output.length() > 0 && (DEBUG || output[0] != '#'))
     Serial.println(output);
-} 
+}
