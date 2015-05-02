@@ -8,3 +8,5 @@ contiki-cc2530dk.lib
 *.map
 *.mem
 
+# Arduino builds
+.build/
