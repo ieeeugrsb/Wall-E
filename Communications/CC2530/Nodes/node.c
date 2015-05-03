@@ -18,6 +18,7 @@
 #include "contiki.h"
 #include "contiki-lib.h"
 #include "contiki-net.h"
+#include "net/rpl/rpl.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -36,6 +37,9 @@ static uint16_t command_len;
 
 #define LOCAL_PORT 3000
 static struct uip_udp_conn *conn;
+
+#define REMOTE_IP(ip) uip_ip6addr(ip,0xAAAA,0,0,0,0x0212,0x4b00,0x02cb,0x0f32);
+#define REMOTE_PORT 3000
 
 /* Declare the process and select it for autostart */
 PROCESS(node_process, "Main process for a node");
@@ -119,7 +123,6 @@ static void check_local_addresses()
 static void network_config()
 {
     uip_ipaddr_t ipaddr;
-    uint16_t rport = 3000;
 
     // Add our global IP address appending our MAC.
     uip_ip6addr(&ipaddr, 0xAAAA, 0, 0, 0, 0, 0, 0, 0);
@@ -130,10 +133,10 @@ static void network_config()
     check_local_addresses();
 
     // Set the remote IP.
-    uip_ip6addr(&ipaddr, 0xAAAA, 0, 0, 0, 0x0212, 0x4b00, 0x02cb, 0x0f32);
+    REMOTE_IP(&ipaddr);
 
     // Create the "connection" so we receive package only from that address
-    conn = udp_new(&ipaddr, UIP_HTONS(rport), NULL);
+    conn = udp_new(&ipaddr, UIP_HTONS(REMOTE_PORT), NULL);
     if (!conn)
         return;
 
