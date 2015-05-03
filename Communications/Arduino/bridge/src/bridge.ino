@@ -27,13 +27,34 @@ void setup() {
   // * Stop Bits: 1
   // * Flow Control: None (no CTS / RTS pins)
   Serial1.begin(115200, SERIAL_8N1);
+
+  // Serial line settings for PC communication
+  Serial.begin(9600);
+  while (!Serial) ;   // For leonardo compability
 }
 
 void loop() {
+  if (Serial1.available() > 0)
+    cc2530_to_pc();
+
+  if (Serial.available() > 0)
+    pc_to_cc2530();
+}
+
+void cc2530_to_pc() {
   // Read the output from CC2530
   String output = Serial1.readString();
 
   // Send it by the USB Serial Communication (PC)
   if (output.length() > 0 && (DEBUG || output[0] != '#'))
     Serial.println(output);
+}
+
+void pc_to_cc2530() {
+  // Read the input from the PC
+  String input = Serial.readString();
+
+  // Send to CC2530
+  if (input.length() > 0)
+    Serial1.println(input);
 }
