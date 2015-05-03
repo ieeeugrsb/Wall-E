@@ -6,6 +6,10 @@ UIP_CONF_RPL=1
 
 NODE_PROJECT = node
 
+ifeq ($(RPL_ROOT), 1)
+  CFLAGS += -DIS_RPL_ROOT
+endif
+
 all: $(NODE_PROJECT)
 
 CONTIKI = ../../contiki

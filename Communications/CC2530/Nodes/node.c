@@ -142,6 +142,34 @@ static void network_config()
 }
 
 /* --------------------------------------------------------------- */
+/* DAG Configuration if this device is RPL root                    */
+/* --------------------------------------------------------------- */
+#if IS_RPL_ROOT
+void create_dag()
+{
+    uip_ipaddr_t ipaddr;
+    rpl_dag_t* dag;
+
+    // Create dag
+    dag = rpl_set_root(RPL_DEFAULT_INSTANCE,
+        &uip_ds6_get_global(ADDR_PREFERRED)->ipaddr);
+
+    if(dag == NULL) {
+      printf("E03\n");
+      return;
+    }
+
+    // Set the network prefix
+    uip_ip6addr(&ipaddr, 0xAAAA, 0, 0, 0, 0, 0, 0, 0);
+    rpl_set_prefix(dag, &ipaddr, 64);
+
+    PRINTF("# Created a new RPL dag with ID: ");
+    PRINT6ADDR(&dag->dag_id);
+    PRINTF("\n");
+}
+#endif
+
+/* --------------------------------------------------------------- */
 /* Main Process                                                    */
 /* --------------------------------------------------------------- */
 PROCESS_THREAD(node_process, ev, data)
@@ -156,6 +184,10 @@ PROCESS_THREAD(node_process, ev, data)
          printf("E01\n");
          PROCESS_EXIT();
     }
+
+    #if IS_RPL_ROOT
+    create_dag();
+    #endif
 
     // Main, infinite, loop of the process
     PRINTF("# Ready!\n");
