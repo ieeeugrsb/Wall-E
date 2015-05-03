@@ -38,7 +38,11 @@ static uint16_t command_len;
 #define LOCAL_PORT 3000
 static struct uip_udp_conn *conn;
 
+#if NODE == 1
+#define REMOTE_IP(ip) uip_ip6addr(ip,0xAAAA,0,0,0,0x0212,0x4b00,0x04e4,0x5116);
+#elif NODE == 2
 #define REMOTE_IP(ip) uip_ip6addr(ip,0xAAAA,0,0,0,0x0212,0x4b00,0x02cb,0x0f32);
+#endif
 #define REMOTE_PORT 3000
 
 /* Declare the process and select it for autostart */

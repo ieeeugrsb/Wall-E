@@ -10,6 +10,12 @@ ifeq ($(RPL_ROOT), 1)
   CFLAGS += -DIS_RPL_ROOT
 endif
 
+# Define the type of node
+ifndef $(NODE)
+  NODE = 1
+endif
+CFLAGS += -DNODE=$(NODE)
+
 all: $(NODE_PROJECT)
 
 CONTIKI = ../../contiki
