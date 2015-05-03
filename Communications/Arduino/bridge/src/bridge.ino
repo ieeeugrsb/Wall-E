@@ -17,7 +17,7 @@
   along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 void setup() {
   // The serial line settings for CC2530 communication are:
@@ -43,7 +43,7 @@ void loop() {
 
 void cc2530_to_pc() {
   // Read the output from CC2530
-  String output = Serial1.readString();
+  String output = Serial1.readStringUntil('\n');
 
   // Send it by the USB Serial Communication (PC)
   if (output.length() > 0 && (DEBUG || output[0] != '#'))
@@ -52,7 +52,7 @@ void cc2530_to_pc() {
 
 void pc_to_cc2530() {
   // Read the input from the PC
-  String input = Serial.readString();
+  String input = Serial.readStringUntil('\n');
 
   // Send to CC2530
   if (input.length() > 0)
